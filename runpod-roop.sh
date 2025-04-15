@@ -53,7 +53,7 @@ if [ ! -d "$VENV_DIR/bin" ]; then
     # Don't exit on failure here, maybe it's already installed system-wide
 
     echo "Creating venv ($VENV_DIR)..." >> $LOG_FILE
-    python -m venv "$VENV_DIR" >> $LOG_FILE 2>&1
+    /venv/main/bin/python3 -m venv venv "$VENV_DIR" >> $LOG_FILE 2>&1
     if [ $? -ne 0 ]; then echo "ERROR: Failed to create venv." >> $LOG_FILE; exit 1; fi
 
     # Activate venv for the setup part
