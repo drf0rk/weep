@@ -64,7 +64,7 @@ def encode_execution_providers(execution_providers: List[str]) -> List[str]:
 def decode_execution_providers(execution_providers: List[str]) -> List[str]:
     list_providers = [provider for provider, encoded_execution_provider in zip(onnxruntime.get_available_providers(), encode_execution_providers(onnxruntime.get_available_providers()))
             if any(execution_provider in encoded_execution_provider for execution_provider in execution_providers)]
-    
+
     try:
         for i in range(len(list_providers)):
             if list_providers[i] == 'CUDAExecutionProvider':
@@ -75,7 +75,7 @@ def decode_execution_providers(execution_providers: List[str]) -> List[str]:
         pass
 
     return list_providers
-    
+
 
 
 def suggest_max_memory() -> int:
@@ -128,10 +128,12 @@ def release_resources() -> None:
 
 
 def pre_check() -> bool:
+    # Check Python version
     if sys.version_info < (3, 9):
         update_status('Python version is not supported - please upgrade to 3.9 or higher.')
         return False
-    
+
+    # Download models
     download_directory_path = util.resolve_relative_path('../models')
     util.conditional_download(download_directory_path, ['https://huggingface.co/countfloyd/deepfake/resolve/main/inswapper_128.onnx'])
     util.conditional_download(download_directory_path, ['https://huggingface.co/countfloyd/deepfake/resolve/main/reswapper_128.onnx'])
@@ -153,21 +155,25 @@ def pre_check() -> bool:
     util.conditional_download(download_directory_path, ['https://huggingface.co/countfloyd/deepfake/resolve/main/real_esrgan_x2.onnx'])
     util.conditional_download(download_directory_path, ['https://huggingface.co/wanesoft/faceswap_pack/resolve/main/lsdir_x4.onnx'])
 
-    import shutil # Make sure it's imported
-
-print("DEBUG: About to check for ffmpeg...")
+    # --- START: Modified FFmpeg Check ---
+    # Ensure shutil is imported (should be near the top of the file)
+    print("DEBUG: About to check for ffmpeg...")
     ffmpeg_path = shutil.which('ffmpeg')
     print(f"DEBUG: shutil.which('ffmpeg') returned: {ffmpeg_path}") # See what path it found, if any
 
     if not ffmpeg_path:
        print("DEBUG: ffmpeg path not found by shutil.which.") # Confirm this branch is taken
        update_status('ffmpeg is not installed.')
-       # NOTE: The original code continues even if ffmpeg isn't found here.
+       # Original script continues here anyway
     else:
        print("DEBUG: ffmpeg path found by shutil.which.") # Confirm it was found
 
     print("DEBUG: Finished ffmpeg check.")
+    # --- END: Modified FFmpeg Check ---
+
+    # Original end of the function
     return True
+
 
 def set_display_ui(function):
     global call_display_ui
@@ -194,7 +200,7 @@ def start() -> None:
         # roop.globals.TARGET_FACES.append(faces[roop.globals.target_face_index])
         # if 'face_enhancer' in roop.globals.frame_processors:
         #     roop.globals.selected_enhancer = 'GFPGAN'
-       
+
     batch_process_regular(None, False, None)
 
 
@@ -202,7 +208,7 @@ def get_processing_plugins(masking_engine):
     processors = {  "faceswap": {}}
     if masking_engine is not None:
         processors.update({masking_engine: {}})
-    
+
     if roop.globals.selected_enhancer == 'GFPGAN':
         processors.update({"gfpgan": {}})
     elif roop.globals.selected_enhancer == 'Codeformer':
@@ -224,7 +230,7 @@ def live_swap(frame, options):
 
     if process_mgr is None:
         process_mgr = ProcessMgr(None)
-    
+
 #    if len(roop.globals.INPUT_FACESETS) <= selected_index:
 #        selected_index = 0
     process_mgr.initialize(roop.globals.INPUT_FACESETS, roop.globals.TARGET_FACES, options)
@@ -278,7 +284,7 @@ def batch_process(output_method, files:list[ProcessEntry], use_new_method) -> No
 
     imagefiles:list[ProcessEntry] = []
     videofiles:list[ProcessEntry] = []
-           
+
     update_status('Sorting videos/images')
 
 
@@ -342,8 +348,8 @@ def batch_process(output_method, files:list[ProcessEntry], use_new_method) -> No
                     util.open_folder(extract_path)
                     input("Press any key to continue...")
                     print("Resorting frames to create video")
-                    util.sort_rename_frames(extract_path)                                    
-                
+                    util.sort_rename_frames(extract_path)
+
                 ffmpeg.create_video(v.filename, v.finalname, fps)
                 if not roop.globals.keep_frames:
                     util.delete_temp_frames(temp_frame_paths[0])
@@ -353,11 +359,11 @@ def batch_process(output_method, files:list[ProcessEntry], use_new_method) -> No
                 else:
                     skip_audio = roop.globals.skip_audio
                 process_mgr.run_batch_inmem(output_method, v.filename, v.finalname, v.startframe, v.endframe, fps,roop.globals.execution_threads)
-                
+
             if not roop.globals.processing:
                 end_processing('Processing stopped!')
                 return
-            
+
             video_file_name = v.finalname
             if os.path.isfile(video_file_name):
                 destination = ''
@@ -399,7 +405,7 @@ def end_processing(msg:str):
 def destroy() -> None:
     if roop.globals.target_path:
         util.clean_temp(roop.globals.target_path)
-    release_resources()        
+    release_resources()
     sys.exit()
 
 
