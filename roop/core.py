@@ -151,7 +151,7 @@ def pre_check() -> bool:
     util.conditional_download(download_directory_path, ['https://huggingface.co/countfloyd/deepfake/resolve/main/isnet-general-use.onnx'])
     util.conditional_download(download_directory_path, ['https://huggingface.co/countfloyd/deepfake/resolve/main/real_esrgan_x4.onnx'])
     util.conditional_download(download_directory_path, ['https://huggingface.co/countfloyd/deepfake/resolve/main/real_esrgan_x2.onnx'])
-    util.conditional_download(download_directory_path, ['https://huggingface.co/countfloyd/deepfake/resolve/main/lsdir_x4.onnx'])
+    util.conditional_download(download_directory_path, ['https://huggingface.co/wanesoft/faceswap_pack/resolve/main/lsdir_x4.onnx'])
 
     if not shutil.which('ffmpeg'):
        update_status('ffmpeg is not installed.')
