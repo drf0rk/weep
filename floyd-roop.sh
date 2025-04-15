@@ -107,7 +107,7 @@ echo "Virtualenv activated." >> $LOG_FILE
 
 # --- Start JupyterLab ---
 echo "Launching JupyterLab..." >> $LOG_FILE
-nohup jupyter lab --port=8080 --ip=0.0.0.0 --no-browser --allow-root --notebook-dir=/workspace/ >> $JUPYTER_LOG 2>&1 &
+nohup "$VENV_DIR/bin/jupyter-lab" --port=8080 --ip=0.0.0.0 --no-browser --allow-root --notebook-dir=/workspace/ >> $JUPYTER_LOG 2>&1 &
 JUPYTER_PID=$!
 echo "JupyterLab launched with PID $JUPYTER_PID. Check $JUPYTER_LOG for token and details." >> $LOG_FILE
 sleep 5
