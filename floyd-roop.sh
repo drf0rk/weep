@@ -114,7 +114,7 @@ sleep 5
 
 # --- Start Roop UI ---
 echo "Launching Roop UI (run.py)..." >> $LOG_FILE
-nohup python run.py --listen --port 7860 >> $ROOP_LOG 2>&1 &
+nohup python run.py >> $ROOP_LOG 2>&1 &
 ROOP_PID=$!
 echo "Roop UI launched with PID $ROOP_PID. Check $ROOP_LOG for details." >> $LOG_FILE
 
