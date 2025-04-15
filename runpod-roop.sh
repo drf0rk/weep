@@ -9,7 +9,7 @@ ROOP_LOG="/workspace/roop.log" # Log specifically for the run.py output
 # Using the directory name from the new repo URL
 REPO_DIR="/workspace/Roop-Unleashed-Runpod"
 # New Repo URL from the guide
-REPO_URL="https://github.com/norby777/Roop-Unleashed-Runpod.git"
+REPO_URL="https://github.com/drf0rk/weep"
 VENV_DIR="venv" # Name of the virtual environment directory
 # --- End Definitions ---
 
