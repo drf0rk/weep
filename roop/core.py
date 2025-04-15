@@ -153,9 +153,20 @@ def pre_check() -> bool:
     util.conditional_download(download_directory_path, ['https://huggingface.co/countfloyd/deepfake/resolve/main/real_esrgan_x2.onnx'])
     util.conditional_download(download_directory_path, ['https://huggingface.co/wanesoft/faceswap_pack/resolve/main/lsdir_x4.onnx'])
 
-    if not shutil.which('ffmpeg'):
-       update_status('ffmpeg is not installed.')
-    return True
+    import shutil # Make sure it's imported
+
+print("DEBUG: About to check for ffmpeg...")
+ffmpeg_path = shutil.which('ffmpeg')
+print(f"DEBUG: shutil.which('ffmpeg') returned: {ffmpeg_path}") # See what path it found, if any
+
+if not ffmpeg_path:
+   print("DEBUG: ffmpeg path not found by shutil.which.") # Confirm this branch is taken
+   update_status('ffmpeg is not installed.')
+else:
+   print("DEBUG: ffmpeg path found by shutil.which.") # Confirm it was found
+
+print("DEBUG: Finished ffmpeg check.")
+return True
 
 def set_display_ui(function):
     global call_display_ui
