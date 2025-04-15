@@ -113,10 +113,12 @@ echo "JupyterLab launched with PID $JUPYTER_PID. Check $JUPYTER_LOG for token an
 sleep 5
 
 # --- Start Roop UI ---
-echo "Launching Roop UI (run.py)..." >> $LOG_FILE
-nohup python run.py >> $ROOP_LOG 2>&1 &
+echo "Launching Roop UI (run.py) using venv python..." >> $LOG_FILE
+# Explicitly use the python executable from the venv directory
+# Note: No need for --listen --port if using the config file modification method
+nohup "$VENV_DIR/bin/python" run.py >> $ROOP_LOG 2>&1 &
 ROOP_PID=$!
-echo "Roop UI launched with PID $ROOP_PID. Check $ROOP_LOG for details." >> $LOG_FILE
+echo "Roop UI launched with PID $ROOP_PID using $VENV_DIR/bin/python. Check $ROOP_LOG for details." >> $LOG_FILE
 
 echo "Automated On-Start Script finished." >> $LOG_FILE
 date >> $LOG_FILE
